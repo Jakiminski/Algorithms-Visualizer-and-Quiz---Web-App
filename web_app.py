@@ -36,7 +36,7 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
     if st.button(config.BUTTON_RETURN_TEXT):
         set_page(config.FRAME_MENU)
 
-    # Painel de controle - Busca
+    # Painel de controle - Ajustado proporção das colunas para [2, 3, 1, 1.5]
     with st.container(border=True):
         c1, c2, c3, c4 = st.columns([2, 3, 1, 1.5])
         with c1:
@@ -126,7 +126,7 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
     st.title("📊 Algoritmos de Ordenação")
     if st.button(config.BUTTON_RETURN_TEXT): set_page(config.FRAME_MENU)
     
-    # Painel de Controle - Ordenação 
+    # Painel de Controle de Ordenação
     with st.container(border=True):
         c1, c2, c3 = st.columns([2, 4, 1.5])
         with c1:
@@ -134,7 +134,7 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
         with c2:
             entrada_sort = st.text_input("Vetor (Números separados por vírgula)", "40, 10, 30, 20, 50")
         with c3:
-            st.write(" ") # Espaçamento para alinhar o botão com os inputs
+            st.write(" ")
             if st.button("ORDENAR", use_container_width=True):
                 raw_items = [x.strip() for x in entrada_sort.split(",") if x.strip()]
                 vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
@@ -168,9 +168,7 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
             bg = config.COLOR_FILL_ARRAY_UNVISITED
             border = config.COLOR_BORDER_ARRAY_DEFAULT
             b_width = "2px"
-            font_color = "black"
 
-            # Lógica de Cores por Algoritmo (mantida)
             if passo["alg"] == "Insertion":
                 if i == passo["target_key_idx"]:
                     border = config.COLOR_BORDER_INSERTION_SORT_ITERATOR_I 
@@ -230,7 +228,7 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
 
             cols[i].markdown(
                 f"""
-                <div style="background-color: {bg}; border: {b_width} solid {border}; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 14px; font-family: sans-serif; font-weight: bold; color: {font_color}; min-width: 30px;">
+                <div style="background-color: {bg}; border: {b_width} solid {border}; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 14px; font-family: sans-serif; font-weight: bold; color: black; min-width: 30px;">
                     {val}
                 </div>
                 """, unsafe_allow_html=True
@@ -252,6 +250,38 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
                 st.rerun()
 
 elif st.session_state.page == config.FRAME_QUIZ:
-    st.title("🧠 Quiz")
+    st.title("🧠 Quiz de Algoritmos")
     if st.button(config.BUTTON_RETURN_TEXT): set_page(config.FRAME_MENU)
-    st.info("Módulo de perguntas e respostas.")
+    
+    st.write("Analise o estado do vetor abaixo e responda à pergunta:")
+    
+    # Exemplo de renderização de vetor no Quiz com cores corrigidas
+    exemplo_vetor = [15, 30, 45, 60, 75]
+    cols = st.columns(len(exemplo_vetor))
+    
+    for i, val in enumerate(exemplo_vetor):
+        # Usando cinza padrão com números em PRETO para legibilidade
+        bg = config.COLOR_FILL_ARRAY_DEFAULT
+        border = config.COLOR_BORDER_ARRAY_DEFAULT
+        
+        cols[i].markdown(
+            f"""
+            <div style="
+                background-color: {bg}; 
+                border: 2px solid {border}; 
+                padding: 10px 2px; 
+                text-align: center; 
+                border-radius: 5px; 
+                font-size: 16px; 
+                font-family: sans-serif; 
+                font-weight: bold; 
+                color: black; 
+                min-width: 40px;
+            ">
+                {val}
+            </div>
+            """, unsafe_allow_html=True
+        )
+    
+    st.write("---")
+    st.info("O Quiz está sendo preparado com base nos rastros de execução.")
