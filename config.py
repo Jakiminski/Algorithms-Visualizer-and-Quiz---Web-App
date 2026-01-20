@@ -15,17 +15,12 @@ QUIZ_LOG_FILE_NAME = "quiz_trace.json"
 
 # UI SETTINGS
 
-## UI Style 
-DFT_STYLE = "flatly"
-
 ## Font Settings
 DFT_FONT_NAME = "Helvetica"
 DFT_FONT_SIZE = 12
-DFT_FONT_COLOR = "black"
 
 TITLE_FONT_NAME = "Helvetica"
 TITLE_FONT_SIZE = 16
-TITLE_FONT_COLOR = "black"
 
 ## Menu Buttons
 
@@ -34,8 +29,8 @@ BUTTON_RETURN_TEXT = "VOLTAR"
 BUTTON_EXIT_TEXT = "SAIR"
 
 BUTTON_APLICAR_SETUP_ALG = "APLICAR SETUP"
-BUTTON_ANTERIOR_TEXT = "<< ANTERIOR"
-BUTTON_PROXIMO_TEXT = "PRÓXIMO >>"
+BUTTON_ANTERIOR_TEXT = "ANTERIOR"
+BUTTON_PROXIMO_TEXT = "PRÓXIMO"
 BUTTON_RESET_TEXT = "RESET"
 
 ## ARRAY SETTINGS
@@ -51,8 +46,6 @@ ARRAY_ELEMENT_FONT_SIZE = 10
 
 COLOR_BORDER_ARRAY_DEFAULT = "#000000"  # Borda Preto - elementos do array
 COLOR_FILL_ARRAY_DEFAULT = "#B0BEC5" # Cinza - elementos do array
-COLOR_FILL_ARRAY_UNVISITED = "#B0BEC5" # Cinza - estado padrão
-COLOR_FILL_ARRAY_VISITED = "#FFEA00"    # Amarelo - estado visitado
 
 # ALGORITHM SETTINGS
 
@@ -61,26 +54,64 @@ BINARY_SEARCH_NAME = "Busca Binária"
 ALGORITHM_SEARCH_ALG_LIST = [LINEAR_SEARCH_NAME, BINARY_SEARCH_NAME]
 
 INSERTION_SORT_NAME = "Insertion Sort"
-BUBBLE_SORT_NAME = "Bubble Sort"       # Placeholder
-SELECTION_SORT_NAME = "Selection Sort" # Placeholder
-ALGORITHM_SORTING_ALG_LIST = [INSERTION_SORT_NAME, BUBBLE_SORT_NAME, SELECTION_SORT_NAME]
+BUBBLE_SORT_NAME = "Bubble Sort"       
+SELECTION_SORT_NAME = "Selection Sort" 
+QUICK_SORT_NAME = "Quick Sort"
+MERGE_SORT_NAME = "Merge Sort"
+
+# Lista atualizada com todos os algoritmos
+ALGORITHM_SORTING_ALG_LIST = [
+    INSERTION_SORT_NAME, 
+    BUBBLE_SORT_NAME, 
+    SELECTION_SORT_NAME, 
+    QUICK_SORT_NAME, 
+    MERGE_SORT_NAME
+]
 
 # Search Algorithms
+COLOR_FILL_ARRAY_UNVISITED = "#B0BEC5" # Cinza - estado padrão
+COLOR_FILL_ARRAY_VISITED = "#FFEA00"    # Amarelo - estado visitado
 COLOR_FILL_ARRAY_FOUND = "#00E229"   # Verde - elemento encontrado
 COLOR_FILL_ARRAY_NOT_FOUND = "#FF0000" # Vermelho - elemento não encontrado
 
 POINTER_FONT_NAME = "Arial"
 POINTER_LIN_FONT_SIZE = 14
 POINTER_BIN_FONT_SIZE = 12
-POINTER_LIN_FONT = (POINTER_FONT_NAME, POINTER_LIN_FONT_SIZE, "bold")
-POINTER_BIN_FONT = (POINTER_FONT_NAME, POINTER_BIN_FONT_SIZE, "bold")
 
+# Busca linear
 COLOR_BORDER_POINTER_LINEAR_ITERATOR = "#182C4A"  # Borda Azul - ponteiro iterador (busca linear)
-COLOR_BORDER_POINTER_BINARY_MID = "#182C4A"      # Borda Azul Escuro - ponteiro meio
-COLOR_BORDER_POINTER_BINARY_LEFT = "#FF3C00"     # Borda Laranja - ponteiro esquerdo
-COLOR_BORDER_POINTER_BINARY_RIGHT = "#FFE600"    # Borda Amarelo - ponteiro direito
+# Busca binária
+COLOR_BORDER_POINTER_BINARY_MID = "#182C4A"      # Borda Azul Escuro - ponteiro meio (busca binária)
+COLOR_BORDER_POINTER_BINARY_LEFT = "#FF3C00"     # Borda Laranja - ponteiro esquerdo (busca binária)
+COLOR_BORDER_POINTER_BINARY_RIGHT = "#FFE600"    # Borda Amarelo - ponteiro direito (busca binária)
 
 # Sorting Algorithms
-COLOR_BORDER_INSERTION_SORT_ITERATOR = "#FF3C00"  # Borda Laranja - ponteiro iterador (insertion sort)
+# Insertion Sort
+COLOR_BORDER_INSERTION_SORT_ITERATOR_I = "#FF3C00"  # Borda Laranja - ponteiro target_key_idx
+COLOR_BORDER_INSERTION_SORT_ITERATOR_J = "#FF0000"  # Borda Vermelha - ponteiro curr_j
+COLOR_FILL_INSERTION_SORT_SORTED = "#00E229"        # Verde - parte ordenada
+
+# Bubble Sort
+COLOR_BORDER_BUBBLE_SORT_POINTER_I = "#FF3C00"      # Borda Laranja - ponteiro i
+COLOR_BORDER_BUBBLE_SORT_POINTER_J = "#FF0000"      # Borda Vermelha - ponteiro j
+COLOR_FILL_BUBBLE_SORT_SORTED = "#00E229"           # Verde - parte ordenada
+
+# Selection Sort
+COLOR_BORDER_SELECTION_SORT_POINTER_I = "#FF3C00"       # Borda Laranja - ponteiro i
+COLOR_BORDER_SELECTION_SORT_POINTER_J = "#FF0000"       # Borda Vermelha - ponteiro j
+COLOR_BORDER_SELECTION_SORT_POINTER_MIN_IDX = "#0000FF" # Borda Azul - ponteiro min_idx
+COLOR_FILL_SELECTION_SORT_SORTED = "#00E229"            # Verde - parte ordenada
+
+# Quick Sort
+COLOR_BORDER_QUICK_SORT_POINTER_LOW = "#FF3C00"   # Borda Laranja - ponteiro low
+COLOR_BORDER_QUICK_SORT_POINTER_HIGH = "#FF0000"  # Borda Vermelha - ponteiro high
+COLOR_BORDER_QUICK_SORT_PIVOT = "#0000FF"         # Borda Azul - pivô
+COLOR_FILL_QUICK_SORT_SORTED = "#00E229"          # Verde - parte ordenada
+
+# Merge Sort
+COLOR_BORDER_MERGE_SORT_RANGE = "#0000FF"    # Borda Azul - intervalo sendo mesclado
+COLOR_FILL_MERGE_SORT_ACTIVE = "#FFF59D"     # Amarelo Claro - área ativa
+COLOR_FILL_MERGE_SORT_SORTED = "#00E229"     # Verde - parte ordenada
+
 # QUIZ SETTINGS
 QUIZ_MAX_QUESTIONS = 10

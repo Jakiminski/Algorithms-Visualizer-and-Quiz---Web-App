@@ -36,21 +36,19 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
     if st.button(config.BUTTON_RETURN_TEXT):
         set_page(config.FRAME_MENU)
 
-    # Painel de controle ajustado para inputs de 1 a 100
+    # Painel de controle - Busca
     with st.container(border=True):
-        c1, c2, c3, c4 = st.columns([2, 3, 1, 1])
+        c1, c2, c3, c4 = st.columns([2, 3, 1, 1.5])
         with c1:
             selecao = st.selectbox("Algoritmo", config.ALGORITHM_SEARCH_ALG_LIST)
         with c2:
-            entrada = st.text_input("Vetor (Números entre 1 e 100 separados por vírgula)", "10, 25, 42, 55, 70, 88, 99")
+            entrada = st.text_input("Vetor (Números separados por vírgula)", "10, 25, 42, 55, 70, 88, 99")
         with c3:
             alvo = st.number_input("Alvo", value=55, min_value=1, max_value=100)
         with c4:
             st.write(" ")
             if st.button("EXECUTAR", use_container_width=True):
-                # CORREÇÃO: Filtramos espaços e forçamos o range 1-100 na validação
                 raw_items = [x.strip() for x in entrada.split(",") if x.strip()]
-                # Chamamos valid_input garantindo que valores > 10 não virem 0
                 vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
                 
                 if selecao == config.BINARY_SEARCH_NAME:
@@ -65,11 +63,8 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
     # --- 3. RENDERIZAÇÃO DO VETOR (BUSCA) ---
     if st.session_state.trace:
         passo = st.session_state.trace[st.session_state.step_index]
-        
         st.subheader(f"Comparações: {passo.get('comparações', 0)}")
 
-        # Ajuste de layout: se o vetor for grande, as colunas ficam muito estreitas.
-        # Criamos colunas dinâmicas para os elementos.
         n_elementos = len(passo["array"])
         cols = st.columns(n_elementos)
         
@@ -78,7 +73,6 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
             border = config.COLOR_BORDER_ARRAY_DEFAULT
             b_width = "2px"
 
-            # Lógica de Cores para Busca Linear
             if selecao == config.LINEAR_SEARCH_NAME:
                 if i == passo["idx"]:
                     border = config.COLOR_BORDER_POINTER_LINEAR_ITERATOR
@@ -87,9 +81,10 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
                 elif i < passo["idx"] and passo["idx"] != -1:
                     bg = config.COLOR_FILL_ARRAY_VISITED
 
-            # Lógica de Cores para Busca Binária
             elif selecao == config.BINARY_SEARCH_NAME:
                 l, r, m = passo["l"], passo["r"], passo["m"]
+                if l <= i <= r and passo["m"] != -1:
+                    bg = config.COLOR_FILL_ARRAY_VISITED
                 if i == m:
                     border = config.COLOR_BORDER_POINTER_BINARY_MID
                     b_width = "4px"
@@ -100,34 +95,18 @@ elif st.session_state.page == config.FRAME_SEARCH_ALGORITHMS:
                 elif i == r:
                     border = config.COLOR_BORDER_POINTER_BINARY_RIGHT
                     b_width = "4px"
-                
-                if l <= i <= r and i != m:
-                    bg = config.COLOR_FILL_ARRAY_VISITED
 
             if passo["finalizado"] and not passo["encontrado"]:
                 bg = config.COLOR_FILL_ARRAY_NOT_FOUND
 
-            # Renderização com CSS para garantir que o número caiba e o box seja proporcional
             cols[i].markdown(
                 f"""
-                <div style="
-                    background-color: {bg};
-                    border: {b_width} solid {border};
-                    padding: 10px 2px;
-                    text-align: center;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    font-family: sans-serif;
-                    font-weight: bold;
-                    color: black;
-                    min-width: 30px;
-                ">
+                <div style="background-color: {bg}; border: {b_width} solid {border}; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 14px; font-family: sans-serif; font-weight: bold; color: black; min-width: 30px;">
                     {val}
                 </div>
                 """, unsafe_allow_html=True
             )
 
-        # --- 4. CONTROLES (BUSCA) ---
         st.write("---")
         ctrl_col1, ctrl_col2, ctrl_col3, _ = st.columns([1, 1, 1, 4])
         with ctrl_col1:
@@ -147,15 +126,15 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
     st.title("📊 Algoritmos de Ordenação")
     if st.button(config.BUTTON_RETURN_TEXT): set_page(config.FRAME_MENU)
     
-    # Painel de Controle de Ordenação
+    # Painel de Controle - Ordenação 
     with st.container(border=True):
-        c1, c2, c3 = st.columns([2, 4, 1])
+        c1, c2, c3 = st.columns([2, 4, 1.5])
         with c1:
             selecao_sort = st.selectbox("Algoritmo", config.ALGORITHM_SORTING_ALG_LIST)
         with c2:
-            entrada_sort = st.text_input("Vetor (Números entre 1 e 100)", "40, 10, 30, 20, 50")
+            entrada_sort = st.text_input("Vetor (Números separados por vírgula)", "40, 10, 30, 20, 50")
         with c3:
-            st.write(" ")
+            st.write(" ") # Espaçamento para alinhar o botão com os inputs
             if st.button("ORDENAR", use_container_width=True):
                 raw_items = [x.strip() for x in entrada_sort.split(",") if x.strip()]
                 vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
@@ -166,6 +145,10 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
                     st.session_state.trace = alg.gen_bubble_sort(vetor)
                 elif selecao_sort == config.SELECTION_SORT_NAME:
                     st.session_state.trace = alg.gen_selection_sort(vetor)
+                elif selecao_sort == config.QUICK_SORT_NAME:
+                    st.session_state.trace = alg.gen_quick_sort(vetor)
+                elif selecao_sort == config.MERGE_SORT_NAME:
+                    st.session_state.trace = alg.gen_merge_sort(vetor)
                  
                 st.session_state.step_index = 0
                 st.rerun()
@@ -173,8 +156,6 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
     # Visualização da Ordenação
     if st.session_state.trace:
         passo = st.session_state.trace[st.session_state.step_index]
-        
-        # Exibe descrição do passo se disponível
         if "desc" in passo:
             st.info(f"Passo {st.session_state.step_index + 1}/{len(st.session_state.trace)}: {passo['desc']}")
         else:
@@ -189,69 +170,72 @@ elif st.session_state.page == config.FRAME_SORTING_ALGORITHMS:
             b_width = "2px"
             font_color = "black"
 
-            # Lógica de Cores para Insertion Sort
+            # Lógica de Cores por Algoritmo (mantida)
             if passo["alg"] == "Insertion":
-                # Elemento sendo inserido (target)
                 if i == passo["target_key_idx"]:
-                    border = config.COLOR_BORDER_INSERTION_SORT_ITERATOR # Laranja
+                    border = config.COLOR_BORDER_INSERTION_SORT_ITERATOR_I 
                     b_width = "4px"
-                    bg = "#FFCCBC" # Laranja claro
-                # Elemento sendo comparado (current j)
                 if i == passo["curr_j"]:
-                    bg = config.COLOR_FILL_ARRAY_VISITED # Amarelo
+                    border = config.COLOR_BORDER_INSERTION_SORT_ITERATOR_J
+                    b_width = "4px"
+                    bg = config.COLOR_FILL_ARRAY_VISITED
 
-            # Lógica de Cores para Bubble Sort
             elif passo["alg"] == "Bubble":
-                # Elementos sendo comparados ou trocados
+                if passo["action"] != "start" and passo["action"] != "finished":
+                    sorted_start_index = len(passo["array"]) - passo.get("i", 0)
+                    if i >= sorted_start_index:
+                        bg = config.COLOR_FILL_BUBBLE_SORT_SORTED
                 if i == passo.get("j") or i == passo.get("j_next"):
-                    if passo["action"] == "swap":
-                        bg = "#FFAB91" # Vermelho claro para troca
-                        border = "#D84315"
-                    else:
-                        bg = config.COLOR_FILL_ARRAY_VISITED # Amarelo para comparação
+                    if passo["action"] == "swap": bg = config.COLOR_FILL_ARRAY_VISITED
+                    if i == passo.get("j"): border = config.COLOR_BORDER_BUBBLE_SORT_POINTER_J
+                    else: border = config.COLOR_BORDER_BUBBLE_SORT_POINTER_I
                     b_width = "3px"
-                # Parte já ordenada (final do array)
-                if i > (len(passo["array"]) - 1 - passo.get("i", 0)) and passo["action"] != "finished":
-                     bg = "#C8E6C9" # Verde claro
 
-            # Lógica de Cores para Selection Sort
             elif passo["alg"] == "Selection":
-                # Mínimo atual encontrado
+                if i < passo.get("i", 0): bg = config.COLOR_FILL_SELECTION_SORT_SORTED
                 if i == passo.get("min_idx"):
-                    bg = "#81D4FA" # Azul claro
-                    border = "#0288D1"
-                    b_width = "3px"
-                # Elemento sendo verificado
+                    border = config.COLOR_BORDER_SELECTION_SORT_POINTER_MIN_IDX
+                    b_width = "4px"
                 elif i == passo.get("curr"):
-                    bg = config.COLOR_FILL_ARRAY_VISITED # Amarelo
-                # Parte já ordenada (início do array)
-                elif i < passo.get("i", 0):
-                    bg = "#C8E6C9" # Verde claro
+                    border = config.COLOR_BORDER_SELECTION_SORT_POINTER_J
+                    b_width = "3px"
+                    bg = config.COLOR_FILL_ARRAY_VISITED
 
-            # Estado Final
-            if passo.get("action") == "finished":
-                bg = "#C8E6C9" # Verde para tudo ordenado
+            elif passo["alg"] == "Quick":
+                low, high, pivot_idx = passo.get("low", -1), passo.get("high", -1), passo.get("pivot_idx", -1)
+                curr_i, curr_j = passo.get("i", -2), passo.get("curr", -2)
+                if low != -1 and high != -1 and low <= i <= high: bg = "#E3F2FD"
+                if i == pivot_idx and pivot_idx != -1:
+                    border = config.COLOR_BORDER_QUICK_SORT_PIVOT
+                    b_width = "4px"
+                    bg = "#BBDEFB"
+                if i == curr_i:
+                    border = config.COLOR_BORDER_QUICK_SORT_POINTER_LOW
+                    b_width = "3px"
+                elif i == curr_j:
+                    border = config.COLOR_BORDER_QUICK_SORT_POINTER_HIGH
+                    b_width = "3px"
+            
+            elif passo["alg"] == "Merge":
+                l, r, k = passo.get("l", -1), passo.get("r", -1), passo.get("curr_k", -1)
+                if l != -1 and r != -1 and l <= i <= r:
+                    bg = config.COLOR_FILL_MERGE_SORT_ACTIVE
+                    border = config.COLOR_BORDER_MERGE_SORT_RANGE
+                if i == k:
+                    border = "#000000"
+                    b_width = "4px"
+                    bg = config.COLOR_FILL_ARRAY_VISITED
+
+            if passo.get("action") == "finished": bg = config.COLOR_FILL_ARRAY_FOUND
 
             cols[i].markdown(
                 f"""
-                <div style="
-                    background-color: {bg};
-                    border: {b_width} solid {border};
-                    padding: 10px 2px;
-                    text-align: center;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    font-family: sans-serif;
-                    font-weight: bold;
-                    color: {font_color};
-                    min-width: 30px;
-                ">
+                <div style="background-color: {bg}; border: {b_width} solid {border}; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 14px; font-family: sans-serif; font-weight: bold; color: {font_color}; min-width: 30px;">
                     {val}
                 </div>
                 """, unsafe_allow_html=True
             )
 
-        # --- 4. CONTROLES (ORDENAÇÃO) ---
         st.write("---")
         ctrl_col1, ctrl_col2, ctrl_col3, _ = st.columns([1, 1, 1, 4])
         with ctrl_col1:

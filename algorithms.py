@@ -154,15 +154,153 @@ def gen_binary_search(v, target_key, filename=LOG_FILE_NAME):
 # Gerar rastro de execução para Insertion Sort
 def gen_insertion_sort(v, filename=LOG_FILE_NAME):
     trace = []
-    trace.append({"alg": "Insertion", "target_key_idx": 0, "target_key_val": v[0], "curr_j": 0, "array": list(v)})
+    # Estado inicial
+    trace.append({"alg": "Insertion", "target_key_idx": 0, "target_key_val": v[0], "curr_j": -1, "array": list(v), "desc": "Início"})
+    
     for i in range(1, len(v)):
         target_key = v[i]
         j = i - 1
+        trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j, "array": list(v), "desc": f"Seleciona {target_key}"})
+        
         while j >= 0 and v[j] > target_key:
             v[j + 1] = v[j]
-            trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j, "array": list(v)})
+            trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j, "array": list(v), "desc": f"Move {v[j]} para a direita"})
             j -= 1
+        
         v[j + 1] = target_key
-        trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j + 1, "array": list(v)})
+        trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j + 1, "array": list(v), "desc": f"Insere {target_key} na posição {j+1}"})
+        
     return save_trace_to_json(trace, filename)
 
+
+# Gerar rastro de execução para Bubble Sort
+def gen_bubble_sort(v, filename=LOG_FILE_NAME):
+    trace = []
+    n = len(v)
+    trace.append({"alg": "Bubble", "i": -1, "j": -1, "j_next": -1, "action": "start", "array": list(v), "desc": "Início"})
+    
+    for i in range(n):
+        swapped = False
+        for j in range(0, n - i - 1):
+            trace.append({"alg": "Bubble", "i": i, "j": j, "j_next": j+1, "action": "compare", "array": list(v), "desc": f"Compara {v[j]} e {v[j+1]}"})
+            if v[j] > v[j + 1]:
+                v[j], v[j + 1] = v[j + 1], v[j]
+                swapped = True
+                trace.append({"alg": "Bubble", "i": i, "j": j, "j_next": j+1, "action": "swap", "array": list(v), "desc": f"Troca {v[j]} com {v[j+1]}"})
+        
+        if not swapped:
+            break
+            
+    trace.append({"alg": "Bubble", "i": -1, "j": -1, "j_next": -1, "action": "finished", "array": list(v), "desc": "Ordenação Concluída"})
+    return save_trace_to_json(trace, filename)
+
+
+# Gerar rastro de execução para Selection Sort
+def gen_selection_sort(v, filename=LOG_FILE_NAME):
+    trace = []
+    n = len(v)
+    trace.append({"alg": "Selection", "i": -1, "curr": -1, "min_idx": -1, "action": "start", "array": list(v), "desc": "Início"})
+
+    for i in range(n):
+        min_idx = i
+        trace.append({"alg": "Selection", "i": i, "curr": i, "min_idx": min_idx, "action": "start_pass", "array": list(v), "desc": f"Define mínimo inicial como {v[min_idx]}"})
+        
+        for j in range(i + 1, n):
+            trace.append({"alg": "Selection", "i": i, "curr": j, "min_idx": min_idx, "action": "compare", "array": list(v), "desc": f"Compara {v[j]} com mínimo atual {v[min_idx]}"})
+            if v[j] < v[min_idx]:
+                min_idx = j
+                trace.append({"alg": "Selection", "i": i, "curr": j, "min_idx": min_idx, "action": "new_min", "array": list(v), "desc": f"Novo mínimo encontrado: {v[min_idx]}"})
+        
+        if min_idx != i:
+            v[i], v[min_idx] = v[min_idx], v[i]
+            trace.append({"alg": "Selection", "i": i, "curr": n, "min_idx": min_idx, "action": "swap", "array": list(v), "desc": f"Troca {v[i]} com {v[min_idx]}"})
+        else:
+            trace.append({"alg": "Selection", "i": i, "curr": n, "min_idx": min_idx, "action": "no_swap", "array": list(v), "desc": "Mínimo já está na posição correta"})
+
+    trace.append({"alg": "Selection", "i": -1, "curr": -1, "min_idx": -1, "action": "finished", "array": list(v), "desc": "Ordenação Concluída"})
+    return save_trace_to_json(trace, filename)
+
+
+# Gerar rastro de execução para Quick Sort
+def gen_quick_sort(v, filename=LOG_FILE_NAME):
+    trace = []
+    
+    def partition(arr, low, high):
+        pivot = arr[high]
+        trace.append({"alg": "Quick", "low": low, "high": high, "pivot_idx": high, "i": low-1, "curr": -1, "action": "pivot_select", "array": list(arr), "desc": f"Pivô escolhido: {pivot}"})
+        
+        i = low - 1
+        for j in range(low, high):
+            trace.append({"alg": "Quick", "low": low, "high": high, "pivot_idx": high, "i": i, "curr": j, "action": "compare", "array": list(arr), "desc": f"Compara {arr[j]} com pivô {pivot}"})
+            if arr[j] <= pivot:
+                i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+                trace.append({"alg": "Quick", "low": low, "high": high, "pivot_idx": high, "i": i, "curr": j, "action": "swap", "array": list(arr), "desc": f"Troca {arr[i]} e {arr[j]}"})
+        
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+        trace.append({"alg": "Quick", "low": low, "high": high, "pivot_idx": i + 1, "i": i, "curr": high, "action": "partition_done", "array": list(arr), "desc": f"Pivô {pivot} colocado na posição final {i+1}"})
+        return i + 1
+
+    def quick_sort_recursive(arr, low, high):
+        if low < high:
+            pi = partition(arr, low, high)
+            quick_sort_recursive(arr, low, pi - 1)
+            quick_sort_recursive(arr, pi + 1, high)
+
+    trace.append({"alg": "Quick", "low": 0, "high": len(v)-1, "pivot_idx": -1, "i": -1, "curr": -1, "action": "start", "array": list(v), "desc": "Início"})
+    quick_sort_recursive(v, 0, len(v) - 1)
+    trace.append({"alg": "Quick", "low": -1, "high": -1, "pivot_idx": -1, "i": -1, "curr": -1, "action": "finished", "array": list(v), "desc": "Ordenação Concluída"})
+    
+    return save_trace_to_json(trace, filename)
+
+
+# Gerar rastro de execução para Merge Sort
+def gen_merge_sort(v, filename=LOG_FILE_NAME):
+    trace = []
+    
+    def merge(arr, l, m, r):
+        n1 = m - l + 1
+        n2 = r - m
+        L = arr[l:m+1]
+        R = arr[m+1:r+1]
+        
+        trace.append({"alg": "Merge", "l": l, "m": m, "r": r, "action": "split", "array": list(arr), "desc": f"Intercalando sub-vetores: {L} e {R}"})
+
+        i = j = 0
+        k = l
+        
+        while i < n1 and j < n2:
+            trace.append({"alg": "Merge", "l": l, "m": m, "r": r, "curr_k": k, "action": "compare", "array": list(arr), "desc": f"Compara {L[i]} e {R[j]}"})
+            if L[i] <= R[j]:
+                arr[k] = L[i]
+                i += 1
+            else:
+                arr[k] = R[j]
+                j += 1
+            k += 1
+            trace.append({"alg": "Merge", "l": l, "m": m, "r": r, "curr_k": k-1, "action": "merge_step", "array": list(arr), "desc": f"Copia valor para posição {k-1}"})
+
+        while i < n1:
+            arr[k] = L[i]
+            i += 1
+            k += 1
+            trace.append({"alg": "Merge", "l": l, "m": m, "r": r, "curr_k": k-1, "action": "merge_step", "array": list(arr), "desc": "Copia restante da esquerda"})
+
+        while j < n2:
+            arr[k] = R[j]
+            j += 1
+            k += 1
+            trace.append({"alg": "Merge", "l": l, "m": m, "r": r, "curr_k": k-1, "action": "merge_step", "array": list(arr), "desc": "Copia restante da direita"})
+
+    def merge_sort_recursive(arr, l, r):
+        if l < r:
+            m = l + (r - l) // 2
+            merge_sort_recursive(arr, l, m)
+            merge_sort_recursive(arr, m + 1, r)
+            merge(arr, l, m, r)
+
+    trace.append({"alg": "Merge", "l": 0, "r": len(v)-1, "action": "start", "array": list(v), "desc": "Início"})
+    merge_sort_recursive(v, 0, len(v) - 1)
+    trace.append({"alg": "Merge", "l": -1, "r": -1, "action": "finished", "array": list(v), "desc": "Ordenação Concluída"})
+    
+    return save_trace_to_json(trace, filename)
