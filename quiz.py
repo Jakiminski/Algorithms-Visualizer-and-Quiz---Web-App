@@ -72,13 +72,10 @@ class QuizEngine:
         
         # Completa opções
         while len(options) < 4:
-            if "comparar" in correct_val.lower() or "encontrar" in correct_val.lower():
-                extra = f"Ação aleatória {random.randint(1,99)}"
-            else:
-                extra = str(random.randint(0, 50))
-            if extra not in options: 
-                options.append(extra)
-        
+            fake_option = "Encontra o valor " + str(random.randint(0, max(1, int(correct_val)*2))) + "."
+            if fake_option not in options:
+                options.append(fake_option)
+
         random.shuffle(options)
         final_options = options[:4]
         
@@ -105,13 +102,15 @@ class QuizEngine:
         
         step = random.randint(0, len(trace)-1)
         correct = trace[step]["comparações"]
-        
+        options = [str(correct), str(correct+1), str(correct-1), "0"]
+        random.shuffle(options)
+
         return {
             "type": "search", "algo": LINEAR_SEARCH_NAME, "array": data, "target": target,
             "step_to_show": step, "trace": trace, 
-            "question": f"Busca Linear: Quantas comparações foram feitas até o momento mostrado?",
+            "question": f"Busca Linear: Sabendo que a chave é {target}, quantas comparações foram feitas até o momento mostrado?",
             "correct": correct, 
-            "options": [str(correct), str(correct+1), str(correct-1), "0"]
+            "options": options
         }
 
     def _gen_linear_search_next_comparison(self):
@@ -135,13 +134,26 @@ class QuizEngine:
             correct = f"Comparar {val} com {target}"
 
         fake_idx = (trace[step]["idx"] + 2) % len(data)
+        aux = len(data)-1
+        fake_idx2 = aux if fake_idx != aux and aux > 0 else fake_idx+1
+
+        options = [
+            f"Comparar {data[fake_idx]} com {target}", 
+            f"Comparar {data[fake_idx2]} com {target}",
+            "Continuar busca",
+            "Fim da busca"
+        ]
+        random.shuffle(options)
+        options = options[0:3]
+        options.append(correct)
+        random.shuffle(options)
         
         return {
             "type": "search", "algo": LINEAR_SEARCH_NAME, "array": data, "target": target,
             "step_to_show": step, "trace": trace, 
-            "question": f"Busca Linear: O que acontecerá na PRÓXIMA iteração (Passo {step+2})?",
+            "question": f"Busca Linear: Sabendo que a chave é {target}, o que acontecerá na PRÓXIMA iteração (Passo {step+2})?",
             "correct": correct, 
-            "options": [correct, f"Comparar {data[fake_idx]} com {target}", "Elemento encontrado", "Fim da busca"]
+            "options": options
         }
 
     # --- BUSCA BINARIA ---
@@ -155,13 +167,17 @@ class QuizEngine:
         
         step = random.choice(valid_steps)
         correct = trace[step]["m"]
-        
+        l, r = trace[step]["l"], trace[step]["r"]
+
+        options = [str(correct), str(correct+1), str(correct-1 if correct>0 else 2), str(len(data)-1)]
+        random.shuffle(options)
+
         return {
             "type": "search", "algo": BINARY_SEARCH_NAME, "array": data, "target": target,
             "step_to_show": step, "trace": trace,
-            "question": f"Busca Binária: Qual o índice do elemento 'meio' (m) neste passo?",
+            "question": f"Busca Binária: Sabendo que a chave é {target}, qual o índice do elemento 'meio' (m) neste passo?",
             "correct": correct, 
-            "options": [str(correct), str(correct+1), str(correct-1 if correct>0 else 2), str(len(data)-1)]
+            "options": options
         }
 
     def _gen_binary_search_next_comparison(self):
@@ -185,12 +201,19 @@ class QuizEngine:
             correct = f"Comparar {val} com {target}"
 
         l, r = trace[step]["l"], trace[step]["r"]
+        
+        options = [f"Comparar {data[0]} com {target}", f"Comparar {data[l]} com {data[r]}", "Encerrar busca", "Continuar busca"]
+        random.shuffle(options)
+        options = options[0:3]
+        options.append(correct)
+        random.shuffle(options)
+
         return {
             "type": "search", "algo": BINARY_SEARCH_NAME, "array": data, "target": target,
             "step_to_show": step, "trace": trace,
-            "question": f"Busca Binária: Baseado no estado atual (l={l}, r={r}), qual a ação do PRÓXIMO passo?",
+            "question": f"Busca Binária: Sabendo que a chave é {target}, baseado no estado atual (l={l}, r={r}) qual a ação do PRÓXIMO passo?",
             "correct": correct,
-            "options": [correct, f"Comparar {data[0]} com {target}", "Encerrar busca", "Expandir intervalo"]
+            "options": options
         }
 
     # --- INSERTION SORT ---
@@ -202,13 +225,14 @@ class QuizEngine:
         step = random.randint(0, len(trace)-1)
         
         correct = trace[step].get("target_key_val", data[0])
-        
+        options = [str(correct)] + [str(x) for x in random.sample(data, 3)]
+        random.shuffle(options)
         return {
             "type": "sort", "algo": INSERTION_SORT_NAME, "array": data,
             "step_to_show": step, "trace": trace,
             "question": "Insertion Sort: Qual o valor da chave (pivô) que está sendo posicionada?",
             "correct": correct, 
-            "options": [str(correct)] + [str(x) for x in random.sample(data, 3)]
+            "options": options
         }
 
     def _gen_insertion_sort_next_comparison(self):
