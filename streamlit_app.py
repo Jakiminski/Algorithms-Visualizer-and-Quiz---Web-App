@@ -10,7 +10,6 @@ except ImportError:
     QuizEngine = None
     
 # --- 1. INICIALIZAÇÃO DO ESTADO ---
-# --- 1. INICIALIZAÇÃO DO ESTADO ---
 def init_session_state():
     if "page" not in st.session_state:
         st.session_state.page = FRAME_MENU
@@ -127,9 +126,9 @@ if st.session_state.page == FRAME_MENU:
     st.title(f"🚀 {APP_NAME}")
     col1, col2, col3 = st.columns(3)
     with col1:
-        if st.button("🔍 Busca", use_container_width=True): set_page(FRAME_SEARCH_ALGORITHMS)
+        if st.button("🔍 Algoritmos de Busca", use_container_width=True): set_page(FRAME_SEARCH_ALGORITHMS)
     with col2:
-        if st.button("📊 Ordenação", use_container_width=True): set_page(FRAME_SORTING_ALGORITHMS)
+        if st.button("📊 Algoritmos de Ordenação", use_container_width=True): set_page(FRAME_SORTING_ALGORITHMS)
     with col3:
         if st.button("🧠 Quiz", use_container_width=True): set_page(FRAME_QUIZ)
 
@@ -317,3 +316,4 @@ elif st.session_state.page == FRAME_QUIZ:
                 if st.button(txt_prox, use_container_width=True):
                     st.session_state.quiz_current_index += 1
                     st.rerun()
+
