@@ -1,18 +1,22 @@
-# Algorithms-Visualizer-and-Quiz---Web-App
+# Algorithms-Visualizer-and-Quiz
 Protótipo do sistema web para voltado ao ensino de algoritmos.
+Publicado no [Streamlit Community Cloud](https://share.streamlit.io/)
 
-### Requerimentos para rodar localmente
+URL pública: [https://algorithms-visualizer-and-quiz.streamlit.app/]([https://algorithms-visualizer-and-quiz.streamlit.app/](https://algorithms-visualizer-and-quiz.streamlit.app/)
 
-[Python instalado](https://www.python.org/downloads/)
+### Requerimentos para rodar localmente no StreamLit
 
-PIP (ou usar `python -m pip <comando>` ao invés de `pip <comando>`)
+1. [Python instalado](https://www.python.org/downloads/)
 
-[Streamlit](https://docs.streamlit.io/) (`pip install streamlit`)
+2. PIP (ou usar `python -m pip <comando>` ao invés de `pip <comando>`)
 
-### Server Local    
+3. [Streamlit](https://docs.streamlit.io/) (Usar `pip install streamlit` ou `python -m pip install streamlit` para usar a biblioteca 'steamlit' do python)
+
+### Hospedar na máquina (Server Local)    
     python -m streamlit run streamlit_app.py
 
-### Server local a partir de repositório Git
-    python -m streamlit run https://raw.githubusercontent.com/Jakiminski/Algorithms-Visualizer-and-Quiz---Web-App/refs/heads/main/streamlit_app.py
-Local URL: http://localhost:8501
-Network URL: http://192.168.0.4:8501
+### Hospedar na máquina a partir de repositório Git
+    python -m streamlit run https://raw.githubusercontent.com/Jakiminski/Algorithms-Visualizer-and-Quiz/refs/heads/main/streamlit_app.py
+
+- Local URL: http://localhost:8501
+- Network URL: http://192.168.0.4:8501
