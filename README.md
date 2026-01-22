@@ -2,7 +2,7 @@
 Protótipo do sistema web para voltado ao ensino de algoritmos.
 Publicado no [Streamlit Community Cloud](https://share.streamlit.io/)
 
-URL pública: [https://algorithms-visualizer-and-quiz.streamlit.app/]([https://algorithms-visualizer-and-quiz.streamlit.app/](https://algorithms-visualizer-and-quiz.streamlit.app/)
+URL pública: [https://algorithms-visualizer-and-quiz.streamlit.app/](https://algorithms-visualizer-and-quiz.streamlit.app/)
 
 ### Requerimentos para rodar localmente no StreamLit
 
