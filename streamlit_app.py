@@ -159,22 +159,36 @@ class WebApp:
                 border = COLOR_BORDER_ARRAY_DEFAULT
                 b_width = "2px"
 
-                if selecao == LINEAR_SEARCH_NAME:
-                    if i == passo["idx"]:
+                algo_no_trace = passo.get("alg", "")
+
+            for i, val in enumerate(passo["array"]):
+                bg = COLOR_FILL_ARRAY_UNVISITED
+                border = COLOR_BORDER_ARRAY_DEFAULT
+                b_width = "2px"
+
+                # Verificamos qual algoritmo gerou este passo específico
+                if algo_no_trace == LINEAR_SEARCH_NAME:
+                    # Garante que 'idx' existe antes de acessar, ou usa -1 como fallback seguro
+                    idx = passo.get("idx", -1) 
+                    if i == idx:
                         border = COLOR_BORDER_POINTER_LINEAR_ITERATOR
                         b_width = "4px"
-                        if passo["encontrado"]: bg = COLOR_FILL_ARRAY_FOUND
-                    elif i < passo["idx"] and passo["idx"] != -1:
+                        if passo.get("encontrado"): bg = COLOR_FILL_ARRAY_FOUND
+                    elif i < idx and idx != -1:
                         bg = COLOR_FILL_ARRAY_VISITED
 
-                elif selecao == BINARY_SEARCH_NAME:
-                    l, r, m = passo["l"], passo["r"], passo["m"]
-                    if l <= i <= r and passo["m"] != -1:
+                elif algo_no_trace == BINARY_SEARCH_NAME:
+                    # Usa .get() para evitar KeyError se o rastro estiver corrompido ou incompleto
+                    l = passo.get("l", -1)
+                    r = passo.get("r", -1)
+                    m = passo.get("m", -1)
+                    
+                    if l <= i <= r and m != -1:
                         bg = COLOR_FILL_ARRAY_VISITED
                     if i == m:
                         border = COLOR_BORDER_POINTER_BINARY_MID
                         b_width = "4px"
-                        if passo["encontrado"]: bg = COLOR_FILL_ARRAY_FOUND
+                        if passo.get("encontrado"): bg = COLOR_FILL_ARRAY_FOUND
                     elif i == l:
                         border = COLOR_BORDER_POINTER_BINARY_LEFT
                         b_width = "4px"
@@ -182,7 +196,7 @@ class WebApp:
                         border = COLOR_BORDER_POINTER_BINARY_RIGHT
                         b_width = "4px"
 
-                if passo["finalizado"] and not passo["encontrado"]:
+                if passo.get("finalizado") and not passo.get("encontrado"):
                     bg = COLOR_FILL_ARRAY_NOT_FOUND
 
                 cols[i].markdown(
@@ -499,3 +513,4 @@ class WebApp:
 # --- INICIALIZAÇÃO E EXECUÇÃO ---
 app = WebApp()
 app.render()
+
