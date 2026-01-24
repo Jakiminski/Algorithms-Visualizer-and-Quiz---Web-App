@@ -1,4 +1,6 @@
 import streamlit as st
+import time
+
 import algorithms as alg
 from config import *
 from quiz import QuizEngine
@@ -135,6 +137,7 @@ class WebApp:
             with c4:
                 st.write(" ")
                 if st.button("EXECUTAR", use_container_width=True):
+                    time.sleep(0.3)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
                     raw_items = [x.strip() for x in entrada.split(",") if x.strip()]
                     vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
                     
@@ -159,22 +162,36 @@ class WebApp:
                 border = COLOR_BORDER_ARRAY_DEFAULT
                 b_width = "2px"
 
-                if selecao == LINEAR_SEARCH_NAME:
-                    if i == passo["idx"]:
+                algo_no_trace = passo.get("alg", "")
+
+            for i, val in enumerate(passo["array"]):
+                bg = COLOR_FILL_ARRAY_UNVISITED
+                border = COLOR_BORDER_ARRAY_DEFAULT
+                b_width = "2px"
+
+                # Verificamos qual algoritmo gerou este passo específico
+                if algo_no_trace == LINEAR_SEARCH_NAME:
+                    # Garante que 'idx' existe antes de acessar, ou usa -1 como fallback seguro
+                    idx = passo.get("idx", -1) 
+                    if i == idx:
                         border = COLOR_BORDER_POINTER_LINEAR_ITERATOR
                         b_width = "4px"
-                        if passo["encontrado"]: bg = COLOR_FILL_ARRAY_FOUND
-                    elif i < passo["idx"] and passo["idx"] != -1:
+                        if passo.get("encontrado"): bg = COLOR_FILL_ARRAY_FOUND
+                    elif i < idx and idx != -1:
                         bg = COLOR_FILL_ARRAY_VISITED
 
-                elif selecao == BINARY_SEARCH_NAME:
-                    l, r, m = passo["l"], passo["r"], passo["m"]
-                    if l <= i <= r and passo["m"] != -1:
+                elif algo_no_trace == BINARY_SEARCH_NAME:
+                    # Usa .get() para evitar KeyError se o rastro estiver corrompido ou incompleto
+                    l = passo.get("l", -1)
+                    r = passo.get("r", -1)
+                    m = passo.get("m", -1)
+                    
+                    if l <= i <= r and m != -1:
                         bg = COLOR_FILL_ARRAY_VISITED
                     if i == m:
                         border = COLOR_BORDER_POINTER_BINARY_MID
                         b_width = "4px"
-                        if passo["encontrado"]: bg = COLOR_FILL_ARRAY_FOUND
+                        if passo.get("encontrado"): bg = COLOR_FILL_ARRAY_FOUND
                     elif i == l:
                         border = COLOR_BORDER_POINTER_BINARY_LEFT
                         b_width = "4px"
@@ -182,7 +199,7 @@ class WebApp:
                         border = COLOR_BORDER_POINTER_BINARY_RIGHT
                         b_width = "4px"
 
-                if passo["finalizado"] and not passo["encontrado"]:
+                if passo.get("finalizado") and not passo.get("encontrado"):
                     bg = COLOR_FILL_ARRAY_NOT_FOUND
 
                 cols[i].markdown(
@@ -197,14 +214,21 @@ class WebApp:
             ctrl_col1, ctrl_col2, ctrl_col3, _ = st.columns([1, 1, 1, 4])
             with ctrl_col1:
                 if st.button(BUTTON_ANTERIOR_TEXT, disabled=(st.session_state.step_index == 0), use_container_width=True, key="btn_prev_search"):
-                    st.session_state.step_index -= 1
+                    time.sleep(0.2)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
+                    # Proteção: só decrementa se for maior que 0
+                    if st.session_state.step_index > 0:
+                        st.session_state.step_index -= 1
                     st.rerun()
             with ctrl_col2:
                 if st.button(BUTTON_PROXIMO_TEXT, disabled=(st.session_state.step_index >= len(st.session_state.trace)-1), use_container_width=True, key="btn_next_search"):
-                    st.session_state.step_index += 1
+                    time.sleep(0.2)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
+                    # Proteção: só incrementa se ainda houver passos
+                    if st.session_state.step_index < len(st.session_state.trace) - 1:
+                        st.session_state.step_index += 1
                     st.rerun()
             with ctrl_col3:
                 if st.button(BUTTON_RESET_TEXT, use_container_width=True, key="btn_reset_search"):
+                    time.sleep(0.2)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
                     st.session_state.step_index = 0
                     st.rerun()
 
@@ -223,6 +247,7 @@ class WebApp:
             with c3:
                 st.write(" ")
                 if st.button("ORDENAR", use_container_width=True):
+                    time.sleep(0.2)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
                     raw_items = [x.strip() for x in entrada_sort.split(",") if x.strip()]
                     vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
                      
@@ -324,14 +349,17 @@ class WebApp:
             ctrl_col1, ctrl_col2, ctrl_col3, _ = st.columns([1, 1, 1, 4])
             with ctrl_col1:
                 if st.button(BUTTON_ANTERIOR_TEXT, disabled=(st.session_state.step_index == 0), use_container_width=True, key="btn_prev_sort"):
+                    time.sleep(0.2)
                     st.session_state.step_index -= 1
                     st.rerun()
             with ctrl_col2:
                 if st.button(BUTTON_PROXIMO_TEXT, disabled=(st.session_state.step_index >= len(st.session_state.trace)-1), use_container_width=True, key="btn_next_sort"):
+                    time.sleep(0.2)
                     st.session_state.step_index += 1
                     st.rerun()
             with ctrl_col3:
                 if st.button(BUTTON_RESET_TEXT, use_container_width=True, key="btn_reset_sort"):
+                    time.sleep(0.2)
                     st.session_state.step_index = 0
                     st.rerun()
 
@@ -499,3 +527,6 @@ class WebApp:
 # --- INICIALIZAÇÃO E EXECUÇÃO ---
 app = WebApp()
 app.render()
+
+
+
