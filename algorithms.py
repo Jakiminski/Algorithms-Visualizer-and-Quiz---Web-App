@@ -164,21 +164,29 @@ class SortingAlgorithms:
     def insertion_sort(v: list, filename: str = LOG_FILE_NAME) -> list:
         """Gerar rastro de execução para Insertion Sort."""
         trace = []
+        n = len(v)
         trace.append({"alg": "Insertion", "target_key_idx": 0, "target_key_val": v[0], "curr_j": -1, "array": list(v), "desc": "Início"})
-        
+
+        count = 0
         for i in range(1, len(v)):
             target_key = v[i]
             j = i - 1
             trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j, "array": list(v), "desc": f"Seleciona {target_key}"})
             
             while j >= 0 and v[j] > target_key:
+                count += 1
                 v[j + 1] = v[j]
                 trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j, "array": list(v), "desc": f"Move {v[j]} para a direita"})
                 j -= 1
-            
+
+            if j >= 0: count += 1 # Última comparação que falhou no while
             v[j + 1] = target_key
-            trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j + 1, "array": list(v), "desc": f"Insere {target_key} na posição {j+1}"})
-            
+            is_last = (i == n - 1) # Se for o último elemento (i == n-1), marcamos como finalizado
+            trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j + 1, "array": list(v), "finalizado":is_last, "desc": f"Insere {target_key} na posição {j+1}"})
+        
+        # Opcional: Adicionar um passo extra garantindo que todos estão verdes
+        if trace:
+            trace[-1]["finalizado"] = True     
         return TraceManager.save_trace_to_json(trace, filename)
 
     @staticmethod
@@ -350,4 +358,5 @@ def gen_quick_sort(v: list, filename: str = LOG_FILE_NAME) -> list:
 
 def gen_merge_sort(v: list, filename: str = LOG_FILE_NAME) -> list:
     """Backward compatibility wrapper for SortingAlgorithms.merge_sort()"""
+
     return SortingAlgorithms.merge_sort(v, filename)
