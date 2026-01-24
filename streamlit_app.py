@@ -247,7 +247,7 @@ class WebApp:
             with c3:
                 st.write(" ")
                 if st.button("ORDENAR", use_container_width=True):
-                    time.sleep(0.3)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
+                    time.sleep(0.2)  # <--- Delay entre cliques do botão para prevenir button-mash e estabilizar UI
                     raw_items = [x.strip() for x in entrada_sort.split(",") if x.strip()]
                     vetor = [alg.valid_input(i, min_range=1, max_range=100) for i in raw_items]
                      
@@ -350,14 +350,12 @@ class WebApp:
             with ctrl_col1:
                 if st.button(BUTTON_ANTERIOR_TEXT, disabled=(st.session_state.step_index == 0), use_container_width=True, key="btn_prev_sort"):
                     time.sleep(0.2)
-                    if st.session_state.step_index > 0: # Proteção de índice
-                        st.session_state.step_index -= 1
+                    st.session_state.step_index -= 1
                     st.rerun()
             with ctrl_col2:
                 if st.button(BUTTON_PROXIMO_TEXT, disabled=(st.session_state.step_index >= len(st.session_state.trace)-1), use_container_width=True, key="btn_next_sort"):
                     time.sleep(0.2)
-                    if st.session_state.step_index > 0: # Proteção de índice
-                        st.session_state.step_index += 1
+                    st.session_state.step_index += 1
                     st.rerun()
             with ctrl_col3:
                 if st.button(BUTTON_RESET_TEXT, use_container_width=True, key="btn_reset_sort"):
@@ -529,5 +527,6 @@ class WebApp:
 # --- INICIALIZAÇÃO E EXECUÇÃO ---
 app = WebApp()
 app.render()
+
 
 
