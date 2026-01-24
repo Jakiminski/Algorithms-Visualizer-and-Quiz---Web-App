@@ -281,17 +281,13 @@ class WebApp:
                 b_width = "2px"
 
                 if passo["alg"] == "Insertion":
-                    if passo.get("finalizado"):
-                        bg = COLOR_FILL_INSERTION_SORT_SORTED
-                    else:
-                        if i <= passo["target_key_idx"]:
-                            bg = COLOR_FILL_INSERTION_SORT_SORTED
-                        if i == passo["curr_j"]:
-                            border = COLOR_BORDER_INSERTION_SORT_ITERATOR_J
-                            b_width = "4px"
-                        elif i == passo["target_key_idx"]:
-                            border = COLOR_BORDER_INSERTION_SORT_ITERATOR_I
-                            b_width = "4px"
+                    if i == passo["target_key_idx"]:
+                        border = COLOR_BORDER_INSERTION_SORT_ITERATOR_I 
+                        b_width = "4px"
+                    if i == passo["curr_j"]:
+                        border = COLOR_BORDER_INSERTION_SORT_ITERATOR_J
+                        b_width = "4px"
+                        bg = COLOR_FILL_ARRAY_VISITED
 
                 elif passo["alg"] == "Bubble":
                     if passo["action"] != "start" and passo["action"] != "finished":
@@ -531,10 +527,6 @@ class WebApp:
 # --- INICIALIZAÇÃO E EXECUÇÃO ---
 app = WebApp()
 app.render()
-
-
-
-
 
 
 
