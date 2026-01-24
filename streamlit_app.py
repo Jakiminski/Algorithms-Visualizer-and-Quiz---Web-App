@@ -287,10 +287,10 @@ class WebApp:
                         if i <= passo["target_key_idx"]:
                             bg = COLOR_FILL_INSERTION_SORT_SORTED
                         if i == passo["curr_j"]:
-                            border = COLOR_BORDER_INSERTION_SORT_POINTER_J
+                            border = COLOR_BORDER_INSERTION_SORT_ITERATOR_J
                             b_width = "4px"
                         elif i == passo["target_key_idx"]:
-                            border = COLOR_BORDER_INSERTION_SORT_POINTER_I
+                            border = CCOLOR_BORDER_INSERTION_SORT_ITERATOR_I
                             b_width = "4px"
                     """if i == passo["target_key_idx"]:
                         border = COLOR_BORDER_INSERTION_SORT_ITERATOR_I 
@@ -539,6 +539,7 @@ class WebApp:
 # --- INICIALIZAÇÃO E EXECUÇÃO ---
 app = WebApp()
 app.render()
+
 
 
 
