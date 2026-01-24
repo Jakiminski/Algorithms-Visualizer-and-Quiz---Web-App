@@ -185,8 +185,7 @@ class SortingAlgorithms:
             trace.append({"alg": "Insertion", "target_key_idx": i, "target_key_val": target_key, "curr_j": j + 1, "array": list(v), "finalizado":is_last, "desc": f"Insere {target_key} na posição {j+1}"})
         
         # Opcional: Adicionar um passo extra garantindo que todos estão verdes
-        if trace:
-            trace[-1]["finalizado"] = True     
+        #if trace:trace[-1]["finalizado"] = True     
         return TraceManager.save_trace_to_json(trace, filename)
 
     @staticmethod
@@ -360,3 +359,4 @@ def gen_merge_sort(v: list, filename: str = LOG_FILE_NAME) -> list:
     """Backward compatibility wrapper for SortingAlgorithms.merge_sort()"""
 
     return SortingAlgorithms.merge_sort(v, filename)
+
